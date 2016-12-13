@@ -1,0 +1,26 @@
+<div>
+
+  <!-- example using angular2-flex -->
+  <md-card>
+    <md-toolbar color="primary">Manage Source Podcasts</md-toolbar>
+  <md-card-content>
+    <div>
+      <div layout="row">
+        <div flex="33" class="fpink">
+          List of Podcasts...
+            <p *ngFor="let x of [1,2,3,4,5,6,7,8,9,10]">Podcast {{x}}</p>
+            <p *ngFor="let x of [11,12,13,14]">Podcast {{x}}</p>
+            <md-input placeholder="rss feed url" style="width: calc(100% - 7em)"></md-input>
+            <button md-raised-button color="primary">Add</button>
+        </div>
+        <div flex="66" class="fblue">
+          Details about one of the podcasts...
+            <p *ngFor="let x of [1,2,3,4,5,6,7,8,9,0]">Detail {{x}}</p>
+        </div>
+
+      </div>
+    </div>
+  </md-card-content>
+  </md-card>
+
+</div>

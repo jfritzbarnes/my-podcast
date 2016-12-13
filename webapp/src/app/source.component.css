@@ -1,0 +1,46 @@
+
+html, body, app-root, md-tab-group, div, rss-sources {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+rss-sources * { display: flex; height: 100%; }
+
+.box {
+  display: flex;
+  flex-flow: column;
+  /*height: calc(100vh - 11.5em);*/
+}
+
+.box .row {
+  border: 1px dotted grey;
+}
+
+.box .row.header {
+  flex: 0 1 40px;
+}
+
+.box .row.content {
+  flex: 1 1 auto;
+}
+
+.box .row.footer {
+  flex: 0 1 40px;
+}
+
+.fgreen {
+  background-color: #AAFFAA;
+}
+
+.fblue {
+  background-color: #CCCCFF;
+  height: calc(100vh - 11.8em);
+  overflow: scroll
+}
+
+.fpink {
+  background-color: #CCCCCC;
+  height: calc(100vh - 11.8em);
+  overflow: scroll;
+}

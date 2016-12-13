@@ -3,18 +3,22 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { MaterialModule } from '@angular/material';
+import { Angular2FlexModule } from 'angular2-flex';
 
 import { AppComponent } from './app.component';
+import { SourceComponent } from './source.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    SourceComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
-    MaterialModule.forRoot()
+    MaterialModule.forRoot(),
+    Angular2FlexModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent]
