@@ -1,0 +1,25 @@
+{
+  "name": "my-podcast-server",
+  "version": "1.0.0",
+  "description": "curate personal podcasts from a set of podcasts",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jfritzbarnes/my-podcast.git"
+  },
+  "author": "J. Fritz Barnes",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jfritzbarnes/my-podcast/issues"
+  },
+  "homepage": "https://github.com/jfritzbarnes/my-podcast#readme",
+  "dependencies": {
+    "bunyan": "^1.8.5",
+    "hapi": "^16.0.1",
+    "lodash": "^4.17.2",
+    "mem-mirror": "^1.0.0"
+  }
+}
