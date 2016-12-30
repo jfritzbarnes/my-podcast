@@ -8,4 +8,4 @@ CREATE TABLE feed (
 );
 
 -- Down
-DROP TABLe feed;
+DROP TABLE feed;
