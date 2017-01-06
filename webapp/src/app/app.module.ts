@@ -7,6 +7,7 @@ import { Angular2FlexModule } from 'angular2-flex';
 
 import { AppComponent } from './app.component';
 import { SourceComponent } from './source.component';
+import { FeedService } from './feed.service';
 
 @NgModule({
   declarations: [
@@ -20,7 +21,9 @@ import { SourceComponent } from './source.component';
     MaterialModule.forRoot(),
     Angular2FlexModule.forRoot(),
   ],
-  providers: [],
+  providers: [
+    FeedService,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
