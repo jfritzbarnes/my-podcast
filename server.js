@@ -4,7 +4,16 @@ const Hapi = require('hapi');
 const MemMirror = require('mem-mirror');
 
 const server = new Hapi.Server();
-server.connection({port: 9090});
+const connOpts = {
+  port: 9090,
+  routes: {
+    cors: {
+      origin: ['*'],
+      additionalHeaders: ['accept-language', 'cache-control', 'accept-encoding', 'upgrade-insecure-requests', 'user-agent', 'host'],
+    },
+  },
+}
+server.connection(connOpts);
 
 var opts = {
   addSimpleUIRoutes: true,
