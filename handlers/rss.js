@@ -24,7 +24,30 @@ exports.getFeed = function(req, reply) {
     return reply({status: 'fail', message: 'server is not ready'});
   }
 
-  return reply({status: 'fail', message: 'server unimplemented'});
+  //return reply({status: 'fail', message: 'server unimplemented'});
+  const sql = 'SELECT * FROM feed WHERE id=?';
+  let data = null;
+  return req.db.get(sql, [req.params.feedId])
+  .then((row) => {
+    data = row;
+    const feed = new Feed(row.url);
+    return feed.fetch();
+  })
+  .then((f) => {
+    return f.storeItemsInDB(req.db, req.params.feedId);
+  })
+  .then((f) => {
+    //console.log('feed', JSON.stringify(f, null, 2));
+    data.items = f.items;
+    return reply({status: 'success', data: data});
+  })
+  .catch((e) => {
+    console.log(e);
+    return reply({status: 'fail', message: e.message});
+  });
+}
+
+exports.loadFeed = function(req, reply) {
 }
 
 exports.addFeed = function(req, reply) {
