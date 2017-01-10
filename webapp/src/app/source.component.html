@@ -8,14 +8,37 @@
       <div layout="row">
         <div flex="33" class="fpink">
           List of Podcasts...
+            <md-card *ngFor="let f of feeds" (click)="selectPodcast(f.id)">
+              <md-card-header>
+                <img md-card-avatar src="{{f.image_url}}">
+                <md-card-title>{{f.name}}</md-card-title>
+              </md-card-header>
+            </md-card>
+            <p *ngFor="let r of feeds"><img src={{r.image_url}} width=64>{{r.name}}</p>
             <p *ngFor="let x of [1,2,3,4,5,6,7,8,9,10]">Podcast {{x}}</p>
             <p *ngFor="let x of [11,12,13,14]">Podcast {{x}}</p>
             <md-input placeholder="rss feed url" style="width: calc(100% - 7em)"></md-input>
             <button md-raised-button color="primary">Add</button>
         </div>
         <div flex="66" class="fblue">
+          <div *ngIf="selectedFeed">
+            <b>{{selectedFeed.name}}</b>
+            <div *ngIf="selectedDetails">
+              <p *ngFor="let i of selectedDetails.items"
+              [ngClass]="{'viewed': i.viewed, 'in_my_feed': i.in_my_feed}"
+              ><b>{{i.title}}</b>: {{i.description}}<br>
+              <span *ngIf="i.viewed" (click)="i.viewed=0"><i class="material-icons md-18">visibility</i></span>
+              <span *ngIf="!i.viewed" (click)="i.viewed=1"><i class="material-icons md-18">visibility_off</i></span>
+              <span *ngIf="i.in_my_feed" (click)="i.in_my_feed=0"><i class="material-icons md-18">delete</i></span>
+              <span *ngIf="!i.in_my_feed" (click)="i.in_my_feed=1"><i class="material-icons md-18">add_circle</i></span>
+              <!-- <span [ngClass]="{'viewed': i.viewed, 'unviewed': !i.viewed}">viewed</span> -->
+              </p>
+            </div>
+          </div>
+          <!--
           Details about one of the podcasts...
             <p *ngFor="let x of [1,2,3,4,5,6,7,8,9,0]">Detail {{x}}</p>
+          -->
         </div>
 
       </div>

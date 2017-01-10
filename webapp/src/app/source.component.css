@@ -44,3 +44,14 @@ rss-sources * { display: flex; height: 100%; }
   height: calc(100vh - 11.8em);
   overflow: scroll;
 }
+
+.viewed {
+  /*border: 1px solid;*/
+  /*border-color: red;*/
+  color: #777777;
+}
+
+.unviewed {
+  border: 1px solid;
+  border-color: blue;
+}

@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 
 import { Feed } from './feed';
+import { FeedDetails } from './feedDetails';
 import { FeedService } from './feed.service';
+import { find } from 'lodash';
 
 @Component({
   selector: 'rss-sources',
@@ -16,10 +18,27 @@ export class SourceComponent implements OnInit {
   ) {}
 
   feeds: Feed[];
+  selectedFeed: Feed = null;
+  selectedDetails: FeedDetails = null;
 
   getFeeds(): void {
     this.feedService.getFeeds()
-    .then(feeds => this.feeds = feeds);
+    .then(feeds => this.feeds = feeds)
+    .then(() => {
+      console.log('feeds', this.feeds);
+    });
+  }
+
+  selectPodcast(foo): void {
+    console.log('selectPodcast', foo);
+    this.selectedFeed = find(this.feeds, {id: foo});
+    if(this.selectedFeed) {
+      this.feedService.getFeedDetails(this.selectedFeed)
+      .then(details => {
+        console.log('details', details);
+        this.selectedDetails = details;
+      });
+    }
   }
 
   ngOnInit(): void {

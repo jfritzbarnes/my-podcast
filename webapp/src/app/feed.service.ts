@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Headers, Http } from '@angular/http';
 
 import { Feed } from './feed';
+import { FeedDetails } from './feedDetails';
 
 import 'rxjs/add/operator/toPromise';
 
@@ -15,6 +16,13 @@ export class FeedService {
     return this.http.get(this.feedUrl)
     .toPromise()
     .then(response => response.json().data as Feed[])
+    .catch(this.handleError);
+  }
+
+  getFeedDetails(feed: Feed): Promise<FeedDetails> {
+    return this.http.get(this.feedUrl + '/' + feed.id)
+    .toPromise()
+    .then(response => response.json().data as FeedDetails)
     .catch(this.handleError);
   }
 
