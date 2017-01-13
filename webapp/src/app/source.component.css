@@ -55,3 +55,8 @@ rss-sources * { display: flex; height: 100%; }
   border: 1px solid;
   border-color: blue;
 }
+
+.toggleViewed {
+  float: right;
+  padding-right: .25em;
+}

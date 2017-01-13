@@ -23,16 +23,20 @@
         <div flex="66" class="fblue">
           <div *ngIf="selectedFeed">
             <b>{{selectedFeed.name}}</b>
+            <span *ngIf="hideViewed" class="toggleViewed" (click)="hideViewed=!hideViewed">Show Viewed</span>
+            <span *ngIf="!hideViewed" class="toggleViewed" (click)="hideViewed=!hideViewed">Hide Viewed</span>
             <div *ngIf="selectedDetails">
-              <p *ngFor="let i of selectedDetails.items"
-              [ngClass]="{'viewed': i.viewed, 'in_my_feed': i.in_my_feed}"
-              ><b>{{i.title}}</b>: {{i.description}}<br>
-              <span *ngIf="i.viewed" (click)="i.viewed=0"><i class="material-icons md-18">visibility</i></span>
-              <span *ngIf="!i.viewed" (click)="i.viewed=1"><i class="material-icons md-18">visibility_off</i></span>
-              <span *ngIf="i.in_my_feed" (click)="i.in_my_feed=0"><i class="material-icons md-18">delete</i></span>
-              <span *ngIf="!i.in_my_feed" (click)="i.in_my_feed=1"><i class="material-icons md-18">add_circle</i></span>
+              <span *ngFor="let i of selectedDetails.items"
+                [ngClass]="{'viewed': i.viewed, 'in_my_feed': i.in_my_feed}">
+              <p *ngIf="!i.viewed || !hideViewed">
+                <b>{{i.title}}</b>: {{i.description}}<br>
+                <span *ngIf="i.viewed" (click)="i.viewed=0; updateItem(i)"><i class="material-icons md-18">visibility</i></span>
+                <span *ngIf="!i.viewed" (click)="i.viewed=1; updateItem(i)"><i class="material-icons md-18">visibility_off</i></span>
+                <span *ngIf="i.in_my_feed" (click)="i.in_my_feed=0; updateItem(i)"><i class="material-icons md-18">delete</i></span>
+                <span *ngIf="!i.in_my_feed" (click)="i.in_my_feed=1; updateItem(i)"><i class="material-icons md-18">add_circle</i></span>
               <!-- <span [ngClass]="{'viewed': i.viewed, 'unviewed': !i.viewed}">viewed</span> -->
               </p>
+              </span>
             </div>
           </div>
           <!--

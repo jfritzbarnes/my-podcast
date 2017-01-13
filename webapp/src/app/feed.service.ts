@@ -9,6 +9,7 @@ import 'rxjs/add/operator/toPromise';
 @Injectable()
 export class FeedService {
   private feedUrl = 'http://localhost:9090/rss'; // URL to web api
+  private itemUrl = 'http://localhost:9090/item'; // URL to items
 
   constructor(private http: Http) { }
 
@@ -24,6 +25,22 @@ export class FeedService {
     .toPromise()
     .then(response => response.json().data as FeedDetails)
     .catch(this.handleError);
+  }
+
+  loadFeed(feed: Feed): Promise<any> {
+    return this.http.post(this.feedUrl + '/' + feed.id + '/load', '', {})
+    .toPromise()
+    .then(response => response.json() as any);
+  }
+
+  updateItem(item): void {
+    const body = JSON.stringify({viewed: item.viewed, inMyFeed: item.in_my_feed});
+    const headers = new Headers({'Content-Type': 'application/json'});
+    this.http.put(this.itemUrl + '/' + item.id, body, headers)
+    .toPromise()
+    .then((resp) => {
+      console.log('response', resp);
+    });
   }
 
   /*getFeed(id: string): Promise<Feed> {

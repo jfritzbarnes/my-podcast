@@ -1,0 +1,9 @@
+<button md-raised-button color="primary" (click)="clickLoadFeeds()">Load</button>
+<hr>
+Last loaded: {{lastLoaded}}
+<span style="float:right;">Loaded: {{feedsLoaded}}/{{feeds.length}}</span>
+<br>
+... system ...
+<p *ngFor="let s of loadStatus">
+  {{s}}
+</p>

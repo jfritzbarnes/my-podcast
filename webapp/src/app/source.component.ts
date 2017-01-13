@@ -20,6 +20,7 @@ export class SourceComponent implements OnInit {
   feeds: Feed[];
   selectedFeed: Feed = null;
   selectedDetails: FeedDetails = null;
+  hideViewed: boolean = false;
 
   getFeeds(): void {
     this.feedService.getFeeds()
@@ -39,6 +40,11 @@ export class SourceComponent implements OnInit {
         this.selectedDetails = details;
       });
     }
+  }
+
+  updateItem(item): void {
+    console.log('update item', item);
+    this.feedService.updateItem(item);
   }
 
   ngOnInit(): void {

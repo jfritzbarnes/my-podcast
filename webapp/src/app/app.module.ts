@@ -7,12 +7,16 @@ import { Angular2FlexModule } from 'angular2-flex';
 
 import { AppComponent } from './app.component';
 import { SourceComponent } from './source.component';
+import { SystemComponent } from './system.component';
+import { PodcastComponent } from './podcast.component';
 import { FeedService } from './feed.service';
 
 @NgModule({
   declarations: [
     AppComponent,
+    PodcastComponent,
     SourceComponent,
+    SystemComponent,
   ],
   imports: [
     BrowserModule,
