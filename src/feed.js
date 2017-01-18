@@ -1,6 +1,8 @@
 const FeedParser = require('feedparser');
 const request = require('request');
 const striptags = require('striptags');
+const lodash = require('lodash');
+const shortid = require('shortid');
 
 class Feed {
   constructor(feedUrl) {
@@ -36,9 +38,51 @@ class Feed {
           url: data.link,
           guid: data.guid,
           enclosure: data.enclosures[0],
+          pubdate: data.pubdate,
         };
         this.items.push(item);
       });
+    });
+  }
+
+  storeItemsInDB(db, feedId) {
+    const promises = [];
+    lodash.forEach(this.items, (item) => {
+      const select = 'SELECT * FROM items WHERE guid=? AND feed_id=?';
+      const p = db.get(select, [item.guid, feedId])
+      .then((row) => {
+        if(row) return true;
+        if(!item.enclosure) {
+          console.log('missing enclosure', item);
+          return true;
+        }
+
+        const insert = `INSERT INTO items
+          (id, guid, feed_id, title, description, pubdate, url, enclosure_length,
+           enclosure_type, enclosure_url, viewed, in_my_feed)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
+        const params = [
+          shortid.generate(),
+          item.guid,
+          feedId,
+          item.title,
+          item.description,
+          Date.parse(item.pubdate),
+          item.url,
+          item.enclosure.length,
+          item.enclosure.type,
+          item.enclosure.url,
+          0,
+          0
+        ];
+        return db.run(insert, params);
+      });
+      promises.push(p);
+    });
+
+    return Promise.all(promises)
+    .then(() => {
+      return this;
     });
   }
 }

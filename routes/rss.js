@@ -21,6 +21,12 @@ routes.push({
 
 routes.push({
   method: 'POST',
+  path: `${API_BASE_PATH}/{feedId}/load`,
+  handler: Rss.loadFeed
+});
+
+routes.push({
+  method: 'POST',
   path: `${API_BASE_PATH}`,
   handler: Rss.addFeed,
   config: {
@@ -46,6 +52,20 @@ routes.push({
     validate: {
       params: {
         feedId: Joi.string().min(1)
+      }
+    }
+  }
+});
+
+routes.push({
+  method: 'PUT',
+  path: '/item/{itemId}',
+  handler: Rss.updateItem,
+  config: {
+    validate: {
+      payload: {
+        viewed: Joi.number(),
+        inMyFeed: Joi.number(),
       }
     }
   }

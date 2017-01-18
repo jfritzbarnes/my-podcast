@@ -24,7 +24,50 @@ exports.getFeed = function(req, reply) {
     return reply({status: 'fail', message: 'server is not ready'});
   }
 
-  return reply({status: 'fail', message: 'server unimplemented'});
+  const selectFeed = 'SELECT * FROM feed WHERE id=?';
+  let data = null;
+  return req.db.get(selectFeed, [req.params.feedId])
+  .then((row) => {
+    data = row;
+    const selectItems = "SELECT * FROM items WHERE feed_id=? ORDER BY pubdate";
+    return req.db.all(selectItems, [req.params.feedId]);
+  })
+  .then((items) => {
+    data.items = items;
+    return reply({status: 'success', data: data});
+  })
+  .catch((e) => {
+    console.log('get feed items error', e);
+    return reply({status: 'fail', message: e.message});
+  });
+}
+
+exports.loadFeed = function(req, reply) {
+  if(!req.server.app.memMirror.ready) {
+    return reply({status: 'fail', message: 'server is not ready'});
+  }
+
+  //return reply({status: 'fail', message: 'server unimplemented'});
+  const sql = 'SELECT * FROM feed WHERE id=?';
+  let data = null;
+  return req.db.get(sql, [req.params.feedId])
+  .then((row) => {
+    data = row;
+    const feed = new Feed(row.url);
+    return feed.fetch();
+  })
+  .then((f) => {
+    return f.storeItemsInDB(req.db, req.params.feedId);
+  })
+  .then((f) => {
+    //console.log('feed', JSON.stringify(f, null, 2));
+    data.items = f.items;
+    return reply({status: 'success', data: data});
+  })
+  .catch((e) => {
+    console.log(e);
+    return reply({status: 'fail', message: e.message});
+  });
 }
 
 exports.addFeed = function(req, reply) {
@@ -78,6 +121,31 @@ exports.deleteFeed = function(req, reply) {
       return reply({status: 'fail', message: 'not found'});
     } else {
       return reply({status: 'success', message: 'row deleted'});
+    }
+  })
+  .catch((e) => {
+    return reply({status: 'fail', message: e.message});
+  });
+}
+
+exports.updateItem = function(req, reply) {
+  if(!req.server.app.memMirror.ready) {
+    return reply({status: 'fail', message: 'server is not ready'});
+  }
+
+  const sql = 'UPDATE items SET viewed=?, in_my_feed=? WHERE id=?';
+  var params = [
+    req.payload.viewed,
+    req.payload.inMyFeed,
+    req.params.itemId
+  ];
+  return req.db.run(sql, params)
+  .then((results) => {
+    console.log('results', results);
+    if(results.stmt.changes === 0) {
+      return reply({status: 'fail', message: 'not found'});
+    } else {
+      return reply({status: 'success', message: 'row updated'});
     }
   })
   .catch((e) => {
