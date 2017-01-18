@@ -2,7 +2,6 @@
 
 const _ = require('lodash');
 const rss = require('rss');
-//const S3 = require('node-s3');
 const S3FS = require('s3fs');
 
 exports.createFeed = function(req, reply) {
