@@ -1,0 +1,5 @@
+.fblue {
+  background-color: #CCCCFF;
+  overflow-y: scroll;
+  height: calc(100vh - 8.5em);
+}

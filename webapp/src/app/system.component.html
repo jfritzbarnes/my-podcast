@@ -1,9 +1,13 @@
 <button md-raised-button color="primary" (click)="clickLoadFeeds()">Load</button>
+<button md-raised-button color="primary" (click)="initializeServer()">Initialize</button>
+<button md-raised-button color="primary" (click)="shutdownServer()">Shutdown</button>
 <hr>
 Last loaded: {{lastLoaded}}
-<span style="float:right;">Loaded: {{feedsLoaded}}/{{feeds.length}}</span>
-<br>
-... system ...
-<p *ngFor="let s of loadStatus">
-  {{s}}
-</p>
+<span class="flush-right">Loaded: {{feedsLoaded}}/{{feeds.length}}</span>
+<div class="system-log">
+  <br>
+  ... system ...
+  <p *ngFor="let s of loadStatus">
+    {{s}}
+  </p>
+</div>

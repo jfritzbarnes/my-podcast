@@ -1,0 +1,9 @@
+.flush-right {
+  float: right;
+  padding-right: .1em;
+}
+
+.system-log {
+  height: calc(100vh - 10em);
+  background-color: #CCCCCC;
+}

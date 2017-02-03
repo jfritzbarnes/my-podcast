@@ -8,7 +8,7 @@ import { forEach } from 'lodash';
 @Component({
   selector: 'system',
   templateUrl: './system.component.html',
-  styleUrls: [],
+  styleUrls: ['./system.component.css'],
   providers: [FeedService],
 })
 
@@ -35,6 +35,7 @@ export class SystemComponent implements OnInit {
         this.loadStatus.push(`loading... ${f.name}`);
         return this.feedService.loadFeed(f)
         .then((resp) => {
+          this.feedsLoaded++;
           console.log('got back: ', resp);
           this.loadStatus.push(`finishing... ${f.name}`);
         });
@@ -45,8 +46,17 @@ export class SystemComponent implements OnInit {
   clickLoadFeeds(): void {
     const d = new Date();
     this.lastLoaded = d.toLocaleString();
+    this.feedsLoaded = 0;
     this.loadStatus = [];
     this.loadFeeds();
+  }
+
+  shutdownServer(): void {
+    this.feedService.shutdownServer()
+    .then((r) => {
+      const msg = JSON.stringify(r);
+      this.loadStatus.push(`shutdown: ${msg}`)
+    });
   }
 
   ngOnInit(): void {

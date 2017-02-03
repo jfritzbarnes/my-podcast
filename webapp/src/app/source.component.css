@@ -36,13 +36,13 @@ rss-sources * { display: flex; height: 100%; }
 .fblue {
   background-color: #CCCCFF;
   height: calc(100vh - 11.8em);
-  overflow: scroll
+  overflow-y: scroll
 }
 
 .fpink {
   background-color: #CCCCCC;
   height: calc(100vh - 11.8em);
-  overflow: scroll;
+  overflow-y: scroll;
 }
 
 .viewed {

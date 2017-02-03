@@ -10,6 +10,8 @@ import 'rxjs/add/operator/toPromise';
 export class FeedService {
   private feedUrl = 'http://localhost:9090/rss'; // URL to web api
   private itemUrl = 'http://localhost:9090/item'; // URL to items
+  private mypodcastUrl = 'http://localhost:9090/mypodcast'; // URL to curated podcast
+  private systemUrl = 'http://localhost:9090/system'; // URL to system
 
   constructor(private http: Http) { }
 
@@ -41,6 +43,18 @@ export class FeedService {
     .then((resp) => {
       console.log('response', resp);
     });
+  }
+
+  getMyPodcast(): Promise<any[]> {
+    return this.http.get(this.mypodcastUrl)
+    .toPromise()
+    .then(response => response.json().data as any[]);
+  }
+
+  shutdownServer(): Promise<any> {
+    return this.http.post(`${this.systemUrl}/shutdown`, '', {})
+    .toPromise()
+    .then(response => response.json() as any);
   }
 
   /*getFeed(id: string): Promise<Feed> {
