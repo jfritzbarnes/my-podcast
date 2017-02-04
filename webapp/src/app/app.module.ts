@@ -11,6 +11,8 @@ import { SystemComponent } from './system.component';
 import { PodcastComponent } from './podcast.component';
 import { FeedService } from './feed.service';
 
+import { AppRoutingModule } from './app-routing.module';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -24,6 +26,7 @@ import { FeedService } from './feed.service';
     HttpModule,
     MaterialModule.forRoot(),
     Angular2FlexModule.forRoot(),
+    AppRoutingModule,
   ],
   providers: [
     FeedService,

@@ -6,4 +6,5 @@
 .system-log {
   height: calc(100vh - 10em);
   background-color: #CCCCCC;
+  overflow-x: scroll;
 }

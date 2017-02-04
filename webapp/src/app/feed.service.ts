@@ -18,7 +18,15 @@ export class FeedService {
   getFeeds(): Promise<Feed[]> {
     return this.http.get(this.feedUrl)
     .toPromise()
-    .then(response => response.json().data as Feed[])
+    .then((response) => {
+      const obj = response.json();
+      if(obj.status === 'success') {
+        return obj.data as Feed[];
+      } else {
+        // this case returned
+        return [] as Feed[];
+      }
+    })
     .catch(this.handleError);
   }
 
@@ -49,6 +57,12 @@ export class FeedService {
     return this.http.get(this.mypodcastUrl)
     .toPromise()
     .then(response => response.json().data as any[]);
+  }
+
+  initializeServer(token): Promise<any> {
+    return this.http.post(`${this.systemUrl}/dbinit/${token}`, '', {})
+    .toPromise()
+    .then(response => response.json() as any);
   }
 
   shutdownServer(): Promise<any> {

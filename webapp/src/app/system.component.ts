@@ -1,9 +1,14 @@
 import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, Params } from '@angular/router';
+import { URLSearchParams } from '@angular/http';
 
 import { Feed } from './feed';
 import { FeedDetails } from './feedDetails';
 import { FeedService } from './feed.service';
 import { forEach } from 'lodash';
+
+
+var Dropbox: any = require('dropbox');
 
 @Component({
   selector: 'system',
@@ -14,13 +19,20 @@ import { forEach } from 'lodash';
 
 export class SystemComponent implements OnInit {
   constructor(
-    private feedService: FeedService
-  ) {}
+    private feedService: FeedService,
+    private activatedRoute: ActivatedRoute,
+  ) {
+    //console.log('constructor ls', localStorage.accessToken);
+    if(localStorage.getItem('accessToken')) {
+      this.isInitializeEnabled = true;
+    }
+  }
 
   feeds: Feed[] = [];
   lastLoaded: string = 'never';
   feedsLoaded: number = 0;
   loadStatus: string[] = [];
+  isInitializeEnabled: boolean = false;
 
   getFeeds(): void {
     this.feedService.getFeeds()
@@ -51,6 +63,23 @@ export class SystemComponent implements OnInit {
     this.loadFeeds();
   }
 
+  authorizeDropbox(): void {
+    // dropbox support
+    const dropbox = new Dropbox({clientId: 'wn1w3gfvtx2gn26'});
+    const authUrl = dropbox.getAuthenticationUrl('http://localhost:4200/system');
+    //this.location.go(authUrl);
+    window.location.href = authUrl;
+  }
+
+  initializeServer(): void {
+    const token = localStorage.getItem('accessToken');
+    this.feedService.initializeServer(token)
+    .then((r) => {
+      const msg = JSON.stringify(r);
+      this.loadStatus.push(`initialize: ${msg}`)
+    });
+  }
+
   shutdownServer(): void {
     this.feedService.shutdownServer()
     .then((r) => {
@@ -62,5 +91,18 @@ export class SystemComponent implements OnInit {
   ngOnInit(): void {
     console.log('system component init');
     this.getFeeds();
+
+    this.activatedRoute.fragment.subscribe((data: string) => {
+      console.log('fragment data', data);
+      if(data) {
+        const params = new URLSearchParams(data);
+        console.log('params', params);
+        console.log('token', params.get('access_token'));
+        localStorage.setItem('accessToken', params.get('access_token'));
+        this.isInitializeEnabled = true;
+      }
+      //let token = params['#access_token'];
+      //console.log('token', token, params);
+    });
   }
 }

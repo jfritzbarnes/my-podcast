@@ -1,13 +1,14 @@
 <button md-raised-button color="primary" (click)="clickLoadFeeds()">Load</button>
-<button md-raised-button color="primary" (click)="initializeServer()">Initialize</button>
+<button md-raised-button color="primary" *ngIf="isInitializeEnabled"
+  (click)="initializeServer()">Initialize</button>
+<button md-raised-button color="primary" *ngIf="!isInitializeEnabled"
+  (click)="authorizeDropbox()">Login Dropbox</button>
 <button md-raised-button color="primary" (click)="shutdownServer()">Shutdown</button>
 <hr>
 Last loaded: {{lastLoaded}}
-<span class="flush-right">Loaded: {{feedsLoaded}}/{{feeds.length}}</span>
+<span class="flush-right" *ngIf="feeds">Loaded: {{feedsLoaded}}/{{feeds.length}}</span>
 <div class="system-log">
-  <br>
-  ... system ...
-  <p *ngFor="let s of loadStatus">
+  <div *ngFor="let s of loadStatus">
     {{s}}
-  </p>
+  </div>
 </div>
