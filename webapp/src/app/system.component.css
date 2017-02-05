@@ -7,4 +7,6 @@
   height: calc(100vh - 10em);
   background-color: #CCCCCC;
   overflow-x: scroll;
+  font-family: 'Courier New';
+  font-size: 0.80rem;
 }

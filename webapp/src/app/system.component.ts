@@ -5,8 +5,9 @@ import { URLSearchParams } from '@angular/http';
 import { Feed } from './feed';
 import { FeedDetails } from './feedDetails';
 import { FeedService } from './feed.service';
-import { forEach } from 'lodash';
+import { LoggingService } from './logging.service';
 
+import { forEach } from 'lodash';
 
 var Dropbox: any = require('dropbox');
 
@@ -20,6 +21,7 @@ var Dropbox: any = require('dropbox');
 export class SystemComponent implements OnInit {
   constructor(
     private feedService: FeedService,
+    private loggingService: LoggingService,
     private activatedRoute: ActivatedRoute,
   ) {
     //console.log('constructor ls', localStorage.accessToken);
@@ -31,7 +33,8 @@ export class SystemComponent implements OnInit {
   feeds: Feed[] = [];
   lastLoaded: string = 'never';
   feedsLoaded: number = 0;
-  loadStatus: string[] = [];
+  //loadStatus: string[] = [];
+  logs: string[] = [];
   isInitializeEnabled: boolean = false;
 
   getFeeds(): void {
@@ -42,14 +45,17 @@ export class SystemComponent implements OnInit {
   loadFeeds(): void {
     let p = Promise.resolve(true);
     forEach(this.feeds, (f) => {
-      this.loadStatus.push(`configuring... ${f.name}`);
+      this.loggingService.appendLog(`configuring... ${f.name}`);
+      //this.loadStatus.push(`configuring... ${f.name}`);
       p = p.then(() => {
-        this.loadStatus.push(`loading... ${f.name}`);
+        this.loggingService.appendLog(`loading... ${f.name}`);
+        //this.loadStatus.push(`loading... ${f.name}`);
         return this.feedService.loadFeed(f)
         .then((resp) => {
           this.feedsLoaded++;
           console.log('got back: ', resp);
-          this.loadStatus.push(`finishing... ${f.name}`);
+          this.loggingService.appendLog(`finishing... ${f.name}`);
+          //this.loadStatus.push(`finishing... ${f.name}`);
         });
       });
     });
@@ -59,7 +65,7 @@ export class SystemComponent implements OnInit {
     const d = new Date();
     this.lastLoaded = d.toLocaleString();
     this.feedsLoaded = 0;
-    this.loadStatus = [];
+    //this.loadStatus = [];
     this.loadFeeds();
   }
 
@@ -76,7 +82,8 @@ export class SystemComponent implements OnInit {
     this.feedService.initializeServer(token)
     .then((r) => {
       const msg = JSON.stringify(r);
-      this.loadStatus.push(`initialize: ${msg}`)
+      //this.loadStatus.push(`initialize: ${msg}`)
+      this.loggingService.appendLog(`initialize: ${msg}`);
     });
   }
 
@@ -84,13 +91,16 @@ export class SystemComponent implements OnInit {
     this.feedService.shutdownServer()
     .then((r) => {
       const msg = JSON.stringify(r);
-      this.loadStatus.push(`shutdown: ${msg}`)
+      //this.loadStatus.push(`shutdown: ${msg}`)
+      this.loggingService.appendLog(`shutdown: ${msg}`);
     });
   }
 
   ngOnInit(): void {
     console.log('system component init');
     this.getFeeds();
+
+    this.logs = this.loggingService.getLogs();
 
     this.activatedRoute.fragment.subscribe((data: string) => {
       console.log('fragment data', data);

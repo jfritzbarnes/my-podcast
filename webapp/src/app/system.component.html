@@ -8,7 +8,7 @@
 Last loaded: {{lastLoaded}}
 <span class="flush-right" *ngIf="feeds">Loaded: {{feedsLoaded}}/{{feeds.length}}</span>
 <div class="system-log">
-  <div *ngFor="let s of loadStatus">
-    {{s}}
+  <div *ngFor="let l of logs">
+    {{l}}
   </div>
 </div>

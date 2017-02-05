@@ -10,6 +10,7 @@ import { SourceComponent } from './source.component';
 import { SystemComponent } from './system.component';
 import { PodcastComponent } from './podcast.component';
 import { FeedService } from './feed.service';
+import { LoggingService } from './logging.service';
 
 import { AppRoutingModule } from './app-routing.module';
 
@@ -30,6 +31,7 @@ import { AppRoutingModule } from './app-routing.module';
   ],
   providers: [
     FeedService,
+    LoggingService,
   ],
   bootstrap: [AppComponent]
 })
