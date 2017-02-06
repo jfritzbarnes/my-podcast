@@ -35,14 +35,28 @@ rss-sources * { display: flex; height: 100%; }
 
 .fblue {
   background-color: #CCCCFF;
-  height: calc(100vh - 11.8em);
+  height: calc(100vh - 7.8em);
   overflow-y: scroll
 }
 
 .fpink {
   background-color: #CCCCCC;
-  height: calc(100vh - 11.8em);
+  height: calc(100vh - 7.8em);
   overflow-y: scroll;
+}
+
+.source-card {
+  padding: .25em;
+}
+
+.podcast-card {
+  margin: .25em;
+  padding: .5em;
+}
+
+.feed-input {
+  width: calc(100% - 7.25em);
+  padding-left: .25em;
 }
 
 .viewed {
