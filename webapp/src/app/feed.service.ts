@@ -3,6 +3,7 @@ import { Headers, Http } from '@angular/http';
 
 import { Feed } from './feed';
 import { FeedDetails } from './feedDetails';
+import { LoggingService } from './logging.service';
 
 import 'rxjs/add/operator/toPromise';
 
@@ -13,7 +14,7 @@ export class FeedService {
   private mypodcastUrl = 'http://localhost:9090/mypodcast'; // URL to curated podcast
   private systemUrl = 'http://localhost:9090/system'; // URL to system
 
-  constructor(private http: Http) { }
+  constructor(private http: Http, private loggingService: LoggingService) { }
 
   getFeeds(): Promise<Feed[]> {
     return this.http.get(this.feedUrl)
@@ -53,6 +54,17 @@ export class FeedService {
     });
   }
 
+  addFeed(feedUrl: string): void {
+    const body = JSON.stringify({feedUrl});
+    const headers = new Headers({'Content-Type': 'application/json'});
+    this.http.post(this.feedUrl, body, headers)
+    .toPromise()
+    .then((resp) => {
+      const msg = 'addFeed: url=' + feedUrl + ', success=' + (resp.json().status === 'success');
+      this.loggingService.appendLog(msg);
+    });
+  }
+
   getMyPodcast(): Promise<any[]> {
     return this.http.get(this.mypodcastUrl)
     .toPromise()
@@ -60,6 +72,7 @@ export class FeedService {
   }
 
   initializeServer(token): Promise<any> {
+    console.log('sending dbinit: ' + this.systemUrl + '/dbinit/' + token);
     return this.http.post(`${this.systemUrl}/dbinit/${token}`, '', {})
     .toPromise()
     .then(response => response.json() as any);

@@ -102,6 +102,7 @@ export class SystemComponent implements OnInit {
 
     this.logs = this.loggingService.getLogs();
 
+    //localStorage.removeItem('accessToken');
     this.activatedRoute.fragment.subscribe((data: string) => {
       console.log('fragment data', data);
       if(data) {
