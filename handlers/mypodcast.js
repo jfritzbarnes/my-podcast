@@ -3,16 +3,30 @@
 const _ = require('lodash');
 const rss = require('rss');
 const S3FS = require('s3fs');
+const Feed = require('../src/feed');
+const moment = require('moment');
+
+exports.getFeed = function(req, reply) {
+  if(!req.server.app.memMirror.ready) {
+    return reply({status: 'fail', message: 'server is not ready'});
+  }
+
+  return Feed.getFeedItemsFromDB(req.db)
+  .then((data) => {
+    return reply({status: 'success', data: data});
+  })
+  .catch((e) => {
+    console.log('createFeed failed:', e);
+    return reply({status: 'fail', message: e.message});
+  });
+}
 
 exports.createFeed = function(req, reply) {
   if(!req.server.app.memMirror.ready) {
     return reply({status: 'fail', message: 'server is not ready'});
   }
 
-  const sql = `SELECT f.name, i.* FROM items AS i, feed AS f
-    WHERE i.in_my_feed == 1 AND f.id == i.feed_id
-    ORDER BY i.pubdate DESC`;
-  return req.db.all(sql)
+  return Feed.getFeedItemsFromDB(req.db)
   .then((data) => {
     var feed = new rss({
       title: 'Curated Podcasts for Fritz',
@@ -20,10 +34,12 @@ exports.createFeed = function(req, reply) {
     });
 
     _.forEach(data, (row) => {
+      const m = moment(row.pubDate);
+      const origPublish = ' (originally published: ' + m.format('DDMMM') + ')';
       feed.item({
         title: row.title,
-        description: row.name + ': ' + row.description,
-        date: new Date(row.pubdate),
+        description: row.name + ': ' + row.description + origPublish,
+        date: new Date(row.inserted_date),
         author: row.name,
         guid: row.id,
         enclosure: {

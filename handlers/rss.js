@@ -133,20 +133,36 @@ exports.updateItem = function(req, reply) {
     return reply({status: 'fail', message: 'server is not ready'});
   }
 
-  const sql = 'UPDATE items SET viewed=?, in_my_feed=? WHERE id=?';
-  var params = [
-    req.payload.viewed,
-    req.payload.inMyFeed,
-    req.params.itemId
-  ];
-  return req.db.run(sql, params)
-  .then((results) => {
-    console.log('results', results);
-    if(results.stmt.changes === 0) {
-      return reply({status: 'fail', message: 'not found'});
+  const getSql = 'SELECT * FROM items WHERE id=?';
+  return req.db.get(getSql, [req.params.itemId])
+  .then((row) => {
+    if(!row) throw new Error('item not found');
+
+    let updateSql, params;
+    if(req.payload.inMyFeed && !row.inMyFeed) {
+      updateSql = 'UPDATE items SET viewed=?, in_my_feed=?, inserted_date=? WHERE id=?';
+      params = [
+        req.payload.viewed,
+        req.payload.inMyFeed,
+        Date.now(),
+        req.params.itemId
+      ];
     } else {
-      return reply({status: 'success', message: 'row updated'});
+      updateSql = 'UPDATE items SET viewed=?, in_my_feed=? WHERE id=?';
+      params = [
+        req.payload.viewed,
+        req.payload.inMyFeed,
+        req.params.itemId
+      ];
     }
+    return req.db.run(updateSql, params)
+    .then((results) => {
+      if(results.stmt.changes === 0) {
+        return reply({status: 'fail', message: 'not found'});
+      } else {
+        return reply({status: 'success', message: 'row updated'});
+      }
+    })
   })
   .catch((e) => {
     return reply({status: 'fail', message: e.message});
