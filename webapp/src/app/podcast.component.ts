@@ -26,4 +26,8 @@ export class PodcastComponent {
       this.myRssFeed = JSON.stringify(this.items, null, 2)
     });
   }
+
+  writeMyPodcast(): void {
+    this.feedService.writeMyPodcast();
+  }
 }

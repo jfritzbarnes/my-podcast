@@ -65,6 +65,10 @@ rss-sources * { display: flex; height: 100%; }
   color: #777777;
 }
 
+.in_my_feed {
+  color: white;
+}
+
 .unviewed {
   border: 1px solid;
   border-color: blue;

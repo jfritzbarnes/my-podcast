@@ -71,6 +71,17 @@ export class FeedService {
     .then(response => response.json().data as any[]);
   }
 
+  writeMyPodcast(): Promise<string> {
+    return this.http.put(this.mypodcastUrl, {}, {})
+    .toPromise()
+    .then((resp) => {
+      const jsonResp = resp.json();
+      const msg = 'writeMyPodcast: success=' + (jsonResp.status === 'success');
+      this.loggingService.appendLog(msg);
+      return (jsonResp.data && jsonResp.data.xml) || jsonResp.status;
+    });
+  }
+
   initializeServer(token): Promise<any> {
     console.log('sending dbinit: ' + this.systemUrl + '/dbinit/' + token);
     return this.http.post(`${this.systemUrl}/dbinit/${token}`, '', {})
