@@ -87,4 +87,12 @@ class Feed {
   }
 }
 
+Feed.getFeedItemsFromDB = function getFeedItemsFromDB(db) {
+  const sql = `SELECT f.name, i.* FROM items AS i, feed AS f
+    WHERE i.in_my_feed == 1 AND f.id == i.feed_id
+    ORDER BY i.inserted_date DESC
+    LIMIT 20`;
+  return db.all(sql);
+}
+
 module.exports = Feed;
