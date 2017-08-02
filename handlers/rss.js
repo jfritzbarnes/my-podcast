@@ -3,6 +3,11 @@
 const Feed = require('../src/feed.js');
 const shortid = require('shortid');
 
+function markDirty(server) {
+  server.app.dirty = true;
+  server.app.lastChanged = Date.now();
+}
+
 exports.getAllFeeds = function(req, reply) {
   if(!req.server.app.memMirror.ready) {
     return reply({status: 'fail', message: 'server is not ready'});
@@ -47,7 +52,8 @@ exports.loadFeed = function(req, reply) {
     return reply({status: 'fail', message: 'server is not ready'});
   }
 
-  //return reply({status: 'fail', message: 'server unimplemented'});
+  req.server.app.lastChanged = Date.now();
+
   const sql = 'SELECT * FROM feed WHERE id=?';
   let data = null;
   return req.db.get(sql, [req.params.feedId])
@@ -74,6 +80,8 @@ exports.addFeed = function(req, reply) {
   if(!req.server.app.memMirror.ready) {
     return reply({status: 'fail', message: 'server is not ready'});
   }
+
+  req.server.app.lastChanged = Date.now();
 
   const feed = new Feed(req.payload.feedUrl);
 
@@ -114,6 +122,8 @@ exports.deleteFeed = function(req, reply) {
     return reply({status: 'fail', message: 'server is not ready'});
   }
 
+  req.server.app.lastChanged = Date.now();
+
   const sql = 'DELETE FROM feed WHERE id=?';
   return req.db.run(sql, [req.params.feedId])
   .then((results) => {
@@ -132,6 +142,8 @@ exports.updateItem = function(req, reply) {
   if(!req.server.app.memMirror.ready) {
     return reply({status: 'fail', message: 'server is not ready'});
   }
+
+  req.server.app.lastChanged = Date.now();
 
   const getSql = 'SELECT * FROM items WHERE id=?';
   return req.db.get(getSql, [req.params.itemId])

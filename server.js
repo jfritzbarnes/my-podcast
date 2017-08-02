@@ -27,6 +27,10 @@ const plugins = [
   require('./config/routes'),
 ];
 
+// setup local state maintained in the server
+server.app.lastChanged = Date.now();
+server.app.dirty = false;
+
 server.register(plugins)
 .then(() => mm.prepare())
 .then(() => server.start())
@@ -37,3 +41,20 @@ server.register(plugins)
   console.log(`Server start error: ${err.message}`);
   console.log(err);
 });
+
+function periodicUploadChanges() {
+  let p = Promise.resolve();
+
+  console.log('periodicUploadChanges check...');
+  if(server.app.dirty) {
+    if((Date.now() - server.app.lastChanged) > 120 * 1000) {
+      console.log('  cleaning up...');
+      server.app.lastChanged = Date.now();
+      server.app.dirty = false;
+    }
+  }
+
+  p.then(() => setTimeout(periodicUploadChanges, 60 * 1000));
+}
+
+setTimeout(periodicUploadChanges, 60 * 1000);
